@@ -17,21 +17,21 @@ export function LivePreview({ data }: LivePreviewProps) {
     return (
         <div className="h-full flex flex-col">
             {/* Toolbar */}
-            <div className="h-12 border-b bg-white flex items-center justify-between px-4 text-sm flex-none z-10">
-                <span className="font-semibold text-gray-500">A4 Preview</span>
-                <div className="flex items-center gap-2">
-                    <button onClick={() => setScale(s => Math.max(0.3, s - 0.1))} className="p-1 hover:bg-gray-100 rounded">
+            <div className="h-12 border-b border-white/10 bg-[#0a0a0a] flex items-center justify-between px-4 text-sm flex-none z-10">
+                <span className="font-semibold text-white/50">A4 Preview</span>
+                <div className="flex items-center gap-2 text-white/70">
+                    <button onClick={() => setScale(s => Math.max(0.3, s - 0.1))} className="p-1 hover:bg-white/10 rounded transition-colors">
                         <ZoomOut size={16} />
                     </button>
-                    <span className="w-12 text-center text-gray-600">{Math.round(scale * 100)}%</span>
-                    <button onClick={() => setScale(s => Math.min(1.5, s + 0.1))} className="p-1 hover:bg-gray-100 rounded">
+                    <span className="w-12 text-center text-white/90">{Math.round(scale * 100)}%</span>
+                    <button onClick={() => setScale(s => Math.min(1.5, s + 0.1))} className="p-1 hover:bg-white/10 rounded transition-colors">
                         <ZoomIn size={16} />
                     </button>
                 </div>
             </div>
 
             {/* Scrollable Container */}
-            <div className="flex-1 bg-gray-100 overflow-auto relative">
+            <div className="flex-1 bg-[#050505] overflow-auto relative">
                 {/* 
               We use a min-sized flex container to support centering + scrolling.
               'm-auto' on the child ensures it stays centered without clipping left/top 

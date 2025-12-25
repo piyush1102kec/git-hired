@@ -87,27 +87,31 @@ function EditorContent() {
     };
 
     return (
-        <div className="flex flex-col h-screen overflow-hidden font-sans">
+        <div className="flex flex-col h-screen overflow-hidden font-sans bg-[#0a0a0a] text-white relative selection:bg-blue-500/30">
+            {/* Background Decor for Glass Effect */}
+            <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[120px] pointer-events-none"></div>
+            <div className="absolute bottom-[-10%] left-[20%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none"></div>
+
             {/* Header */}
-            <header className="flex-none h-16 border-b flex items-center justify-between px-6 bg-white shadow-sm z-10 print:hidden">
+            <header className="flex-none h-16 border-b border-white/10 flex items-center justify-between px-6 bg-[#0a0a0a] z-10 print:hidden">
                 <div className="flex items-center gap-4">
-                    <Link href="/" className="flex items-center gap-2 text-gray-500 hover:text-gray-900 transition-colors">
+                    <Link href="/dashboard" className="flex items-center gap-2 text-white/60 hover:text-white transition-colors">
                         <ArrowLeft size={20} />
-                        <span className="font-medium">Back to Templates</span>
+                        <span className="font-medium"></span>
                     </Link>
-                    <div className="h-6 w-px bg-gray-200"></div>
-                    <h1 className="font-bold text-lg text-gray-800">Editor</h1>
+                    <div className="h-6 w-px bg-white/10"></div>
+                    <h1 className="font-bold text-lg text-white">Editor</h1>
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <div className={clsx("flex items-center gap-2 text-sm px-3 py-1.5 rounded-full border", isValid ? "bg-green-50 border-green-200 text-green-700" : "bg-red-50 border-red-200 text-red-700")}>
+                    <div className={clsx("flex items-center gap-2 text-sm px-3 py-1.5 rounded-full border", isValid ? "bg-green-500/10 border-green-500/20 text-green-400" : "bg-red-500/10 border-red-500/20 text-red-400")}>
                         {isValid ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
                         <span className="font-medium">{isValid ? "Valid Configuration" : "Invalid Configuration"}</span>
                     </div>
 
                     <button
                         onClick={handleDownload}
-                        className="flex items-center gap-2 px-5 py-2.5 bg-black text-white rounded-lg hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-white text-black rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
                         disabled={!isValid || isDownloading}
                     >
                         <Download size={18} />
@@ -118,23 +122,34 @@ function EditorContent() {
 
             <div className="flex-1 flex overflow-hidden">
                 {/* Left Panel: JSON Editor */}
-                <div className="w-1/2 border-r flex flex-col bg-white print:hidden">
-                    <div className="flex-none px-4 py-3 bg-gray-50 border-b flex justify-between items-center">
-                        <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">JSON Configuration</span>
+                <div className="w-1/2 border-r border-white/10 flex flex-col bg-white/5 backdrop-blur-xl relative z-10 print:hidden">
+                    {/* Subtle gradient background for depth */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 pointer-events-none -z-10"></div>
+
+                    <div className="flex-none px-4 py-3 border-b border-white/10 flex justify-between items-center bg-white/5 backdrop-blur-md">
+                        <span className="text-xs font-bold text-blue-300 uppercase tracking-widest flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                            Config.json
+                        </span>
                     </div>
-                    <div className="flex-1 relative">
+                    <div className="flex-1 relative min-h-0">
                         <JsonEditor
                             defaultValue={jsonString}
                             onChange={handleJsonChange}
                             errors={errors}
                         />
                     </div>
+                    <div className="flex-none px-4 py-2 border-t border-white/5 text-center bg-[#0a0a0a]">
+                        <span className="text-[10px] text-white/20 uppercase tracking-widest font-mono">
+                            &copy; {new Date().getFullYear()} Resume Builder
+                        </span>
+                    </div>
                 </div>
 
                 {/* Right Panel: Preview */}
-                <div className="w-1/2 bg-gray-100 flex flex-col print:w-full">
-                    <div className="flex-none px-4 py-3 bg-gray-50 border-b flex justify-between items-center print:hidden">
-                        <span className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Live Preview</span>
+                <div className="w-1/2 bg-[#050505] flex flex-col print:w-full">
+                    <div className="flex-none px-4 py-3 bg-[#0a0a0a] border-b border-white/10 flex justify-between items-center print:hidden">
+                        <span className="text-sm font-semibold text-white/70 uppercase tracking-wider">Live Preview</span>
                     </div>
                     <div className="flex-1 relative overflow-auto custom-scrollbar">
                         <LivePreview data={parsedData} />

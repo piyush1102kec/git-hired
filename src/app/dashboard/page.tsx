@@ -3,17 +3,67 @@
 import Link from "next/link";
 import { templates, templateIds } from "@/templates/registry";
 import { defaultResume } from "@/lib/defaults";
+import { motion } from "framer-motion";
+
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
+};
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-8 bg-gray-50 font-sans">
-      <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-12">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4">Resume Builder</h1>
-          <p className="text-lg text-gray-600">Select a template to get started. Purely config-driven.</p>
+    <main className="min-h-screen p-8 bg-[#0a0a0a] font-sans text-white overflow-hidden relative">
+      {/* Background Decor */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[100px]"></div>
+        <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[100px]"></div>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <header className="text-center mb-16 pt-10 font-mono">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="inline-block text-left bg-[#0f0f0f] border border-white/10 p-6 rounded-xl shadow-2xl backdrop-blur-md">
+              <div className="flex gap-2 mb-4">
+                <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
+                <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+                <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                <span className="text-purple-400">const</span> stack = <span className="text-blue-400">new</span> <span className="text-yellow-300">Career</span>();
+              </h1>
+              <p className="text-base text-gray-500">
+                <span className="text-green-400/50">{'//'}</span> Select a base configuration.<br />
+                <span className="text-green-400/50">{'//'}</span> Every pixel is customizable via JSON schema.
+              </p>
+              <motion.div
+                animate={{ opacity: [0, 1, 0] }}
+                transition={{ repeat: Infinity, duration: 0.8 }}
+                className="w-3 h-5 bg-blue-500 mt-2 inline-block"
+              />
+            </div>
+          </motion.div>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 pb-20"
+        >
           {templateIds.map((id) => {
             const t = templates[id];
             const Component = t.component;
@@ -22,34 +72,40 @@ export default function Home() {
             const previewData = { ...defaultResume, meta: { ...defaultResume.meta, template: id } };
 
             return (
-              <Link href={`/editor?template=${t.id}`} key={id} className="block group">
-                <div className="border border-gray-200 rounded-xl overflow-hidden hover:shadow-2xl transition-all duration-300 bg-white hover:border-blue-400 flex flex-col h-full">
+              <motion.div variants={item} key={id}>
+                <Link href={`./editor?template=${t.id}`} className="block group h-full">
+                  <div className="relative h-full border border-white/10 rounded-2xl overflow-hidden bg-white/5 backdrop-blur-sm transition-all duration-300 hover:scale-[1.02] hover:bg-white/10 hover:border-white/20 hover:shadow-2xl hover:shadow-blue-500/10 flex flex-col">
 
-                  {/* Preview Container - Scaled View */}
-                  <div className="relative aspect-[210/297] bg-gray-100 overflow-hidden border-b border-gray-100 group-hover:opacity-100 transition-opacity">
-                    {/* 
-                          Scale Wrapper: A4 (210mm) is ~794px wide.
-                          We need to scale it down to fit the card width.
-                          Grid layout changes card width, so we need responsive scaling.
-                          - Default (1 col): Wide crd -> scale 0.45
-                          - md (2 cols): ~350px -> scale 0.4
-                          - lg (3 cols): ~320px -> scale 0.35
-                          - xl (4 cols): ~290px -> scale 0.33
+                    {/* Glass Glare Effect */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+
+                    {/* Preview Container - Scaled View */}
+                    <div className="relative aspect-[210/297] bg-[#000] overflow-hidden border-b border-white/5 group-hover:opacity-100 transition-opacity">
+                      {/* 
+                          scale wrapper logic
                       */}
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[210mm] h-[297mm] origin-top transform scale-[0.33] sm:scale-[0.45] md:scale-[0.4] lg:scale-[0.35] xl:scale-[0.33] pointer-events-none select-none bg-white shadow-sm">
-                      <Component data={previewData as any} isStatic={true} />
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[210mm] h-[297mm] origin-top transform scale-[0.33] sm:scale-[0.45] md:scale-[0.4] lg:scale-[0.35] xl:scale-[0.33] pointer-events-none select-none bg-white shadow-[0_0_40px_rgba(0,0,0,0.5)]">
+                        <Component data={previewData as any} isStatic={true} />
+                      </div>
+
+                      {/* Overlay on hover to show 'Use Template' */}
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-[1px]">
+                        <span className="px-6 py-3 bg-white text-black font-bold rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 shadow-xl">
+                          Use Template
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="p-5 flex-1 flex flex-col justify-end relative z-10">
+                      <h2 className="text-xl font-bold text-white mb-2 group-hover:text-blue-300 transition-colors">{t.name}</h2>
+                      <p className="text-sm text-white/40 leading-relaxed">{t.description}</p>
                     </div>
                   </div>
-
-                  <div className="p-4 flex-1 flex flex-col justify-end bg-white relative z-10">
-                    <h2 className="text-lg font-bold text-gray-800 group-hover:text-blue-600 mb-1">{t.name}</h2>
-                    <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{t.description}</p>
-                  </div>
-                </div>
-              </Link>
+                </Link>
+              </motion.div>
             )
           })}
-        </div>
+        </motion.div>
       </div>
     </main>
   );

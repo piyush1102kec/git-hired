@@ -16,12 +16,32 @@ export function JsonEditor({ defaultValue, onChange, errors }: JsonEditorProps) 
                 height="100%"
                 defaultLanguage="json"
                 defaultValue={defaultValue}
+                theme="vs-dark"
                 onChange={(value) => onChange(value || "")}
                 options={{
                     minimap: { enabled: false },
                     formatOnPaste: true,
                     formatOnType: true,
                     scrollBeyondLastLine: false,
+                    fontSize: 14,
+                    fontFamily: "'Geist Mono', monospace",
+                    padding: { top: 16, bottom: 16 },
+                    renderLineHighlight: 'none',
+                    stickyScroll: { enabled: false },
+                    // Transparent background support
+                    theme: "vs-dark"
+                }}
+                onMount={(editor, monaco) => {
+                    // Define a custom theme that's transparent
+                    monaco.editor.defineTheme('glass-dark', {
+                        base: 'vs-dark',
+                        inherit: true,
+                        rules: [],
+                        colors: {
+                            'editor.background': '#00000000', // Transparent
+                        }
+                    });
+                    monaco.editor.setTheme('glass-dark');
                 }}
             />
             {errors && errors.length > 0 && (
