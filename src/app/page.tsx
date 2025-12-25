@@ -42,7 +42,7 @@ export default function LandingPage() {
           className="inline-flex items-center gap-1.5 px-3 py-1 mb-8 text-xs font-medium text-blue-300 bg-blue-500/10 rounded-full border border-blue-500/20"
         >
           <Terminal size={12} />
-          <span>v2.0 Open Access</span>
+          <span>v1.0 Open Access</span>
         </motion.div>
 
         {/* Headline */}
