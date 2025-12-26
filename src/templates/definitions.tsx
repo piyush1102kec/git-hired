@@ -255,9 +255,12 @@ export const Modern2 = ({ data, isStatic }: ResumeTemplateProps) => {
     const { background, text, font, spacing, primary } = theme;
     const fontClass = font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans";
 
+    const spacingOuter = spacing === "compact" ? "gap-6 p-6" : spacing === "spacious" ? "gap-12 p-12" : "gap-8 p-8";
+    const headerPadding = spacing === "compact" ? "p-8" : spacing === "spacious" ? "p-16" : "p-12";
+
     return (
         <div className={clsx("min-h-[1000px] shadow-sm flex flex-col", fontClass)} style={{ backgroundColor: background, color: text }}>
-            <header className="p-12 text-white" style={{ backgroundColor: primary || "#2563eb" }}>
+            <header className={clsx("text-white", headerPadding)} style={{ backgroundColor: primary || "#2563eb" }}>
                 <h1 className="text-4xl font-bold mb-2">{data.data.name}</h1>
                 <p className="text-lg opacity-90">{data.data.title}</p>
                 <div className="flex gap-4 text-sm mt-4 opacity-80">
@@ -269,13 +272,13 @@ export const Modern2 = ({ data, isStatic }: ResumeTemplateProps) => {
                     <SocialLinks data={data.data} className="text-sm" isStatic={isStatic} />
                 </div>
             </header>
-            <div className="flex flex-1 p-8 gap-8">
+            <div className={clsx("flex flex-1", spacingOuter)}>
                 <main className="w-2/3">
                     {data.sections.filter(s => s.column !== 'sidebar').sort((a, b) => a.order - b.order).map(s => (
                         <SectionRenderer key={s.id} section={s} data={data.data} theme={theme} />
                     ))}
                 </main>
-                <aside className="w-1/3 border-l pl-8">
+                <aside className="w-1/3 border-l pl-8" style={{ borderColor: `${text}20` }}>
                     {data.sections.filter(s => s.column === 'sidebar' || s.type === 'skills').sort((a, b) => a.order - b.order).map(s => (
                         <SectionRenderer key={s.id} section={s} data={data.data} theme={theme} />
                     ))}
@@ -363,11 +366,13 @@ export const Creative1 = ({ data, isStatic }: ResumeTemplateProps) => {
 // 7. Tech 1: Dark sidebar
 export const Tech1 = ({ data, isStatic }: ResumeTemplateProps) => {
     const theme = data.meta.theme || {};
-    const { background, text, font } = theme;
+    const { background, text, font, spacing } = theme;
+    const fontClass = font === "serif" ? "font-serif" : font === "mono" ? "font-mono" : "font-sans"; // Allow font override even if default is mono
+    const spacingClass = spacing === "compact" ? "p-6" : spacing === "spacious" ? "p-12" : "p-8";
 
     return (
-        <div className={clsx("min-h-[1000px] shadow-sm flex font-mono",)} style={{ backgroundColor: background, color: text }}>
-            <aside className="w-1/3 bg-gray-100 p-8 pt-12 border-r" style={{ borderColor: theme.primary }}>
+        <div className={clsx("min-h-[1000px] shadow-sm flex", fontClass)} style={{ backgroundColor: background, color: text }}>
+            <aside className={clsx("w-1/3 bg-gray-100 border-r", spacingClass, "pt-12")} style={{ borderColor: theme.primary }}>
                 <div className="mb-8">
                     <h1 className="text-2xl font-bold mb-2 break-words">{data.data.name}</h1>
                     <div className="text-xs space-y-1 opacity-70">
@@ -384,7 +389,7 @@ export const Tech1 = ({ data, isStatic }: ResumeTemplateProps) => {
                     <SectionRenderer key={s.id} section={s} data={data.data} theme={theme} />
                 ))}
             </aside>
-            <main className="w-2/3 p-12">
+            <main className={clsx("w-2/3", spacingClass, "pt-12")}>
                 {data.sections.filter(s => s.type !== 'skills' && s.id !== 'skills').sort((a, b) => a.order - b.order).map(s => (
                     <SectionRenderer key={s.id} section={s} data={data.data} theme={theme} />
                 ))}
@@ -396,13 +401,18 @@ export const Tech1 = ({ data, isStatic }: ResumeTemplateProps) => {
 // 8. Executive 1: Top bar, heavily padded
 export const Executive1 = ({ data, isStatic }: ResumeTemplateProps) => {
     const theme = data.meta.theme || {};
-    const { background, text, font, primary } = theme;
-    const fontClass = font === "mono" ? "font-mono" : "font-sans";
+    const { background, text, font, spacing, primary } = theme;
+    const fontClass = font === "mono" ? "font-mono" : font === "serif" ? "font-serif" : "font-sans";
+
+    // Executive needs distinct padding adjustments
+    const paddingX = spacing === "compact" ? "px-8" : spacing === "spacious" ? "px-24" : "px-16";
+    const paddingY = spacing === "compact" ? "py-8" : spacing === "spacious" ? "py-16" : "py-12";
+    const contentPadding = spacing === "compact" ? "p-8" : spacing === "spacious" ? "p-24" : "p-16";
 
     return (
         <div className={clsx("min-h-[1000px] shadow-sm flex flex-col", fontClass)} style={{ backgroundColor: background, color: text }}>
             <div className="h-4 w-full" style={{ backgroundColor: primary || "#000" }}></div>
-            <header className="px-16 py-12 flex justify-between items-end border-b">
+            <header className={clsx("flex justify-between items-end border-b", paddingX, paddingY)}>
                 <div>
                     <h1 className="text-4xl font-bold uppercase tracking-widest">{data.data.name}</h1>
                     <p className="text-lg font-light tracking-widest mt-2">{data.data.title}</p>
@@ -415,7 +425,7 @@ export const Executive1 = ({ data, isStatic }: ResumeTemplateProps) => {
                     </div>
                 </div>
             </header>
-            <div className="p-16">
+            <div className={contentPadding}>
                 {data.sections.sort((a, b) => a.order - b.order).map((section) => (
                     <SectionRenderer key={section.id} section={section} data={data.data} theme={theme} />
                 ))}

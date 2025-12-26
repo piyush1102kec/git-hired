@@ -17,6 +17,8 @@ export const ResumeThemeSchema = z.object({
     spacing: z.enum(["compact", "normal", "spacious"]).default("normal"),
 });
 
+export type ResumeTheme = z.infer<typeof ResumeThemeSchema>;
+
 // Meta Information
 export const ResumeMetaSchema = z.object({
     template: TemplateIdSchema,

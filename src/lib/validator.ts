@@ -4,7 +4,7 @@ import { z } from "zod";
 export interface ValidationResult {
     isValid: boolean;
     data?: Resume;
-    errors?: string[];
+    errors?: ValidationError[];
 }
 
 export function validateResume(json: unknown): ValidationResult {
@@ -16,11 +16,11 @@ export function validateResume(json: unknown): ValidationResult {
             data: result.data,
         };
     } else {
-        // Format Zod errors into readable strings
-        const errors = result.error.issues.map((err) => {
-            const path = err.path.join(".");
-            return `${path}: ${err.message}`;
-        });
+        // Format Zod errors into readable objects
+        const errors = result.error.issues.map((err) => ({
+            path: err.path.join("."),
+            message: err.message
+        }));
 
         return {
             isValid: false,
@@ -28,3 +28,9 @@ export function validateResume(json: unknown): ValidationResult {
         };
     }
 }
+
+export interface ValidationError {
+    path: string;
+    message: string;
+}
+
