@@ -12,6 +12,7 @@ import { ArrowLeft, Download, AlertCircle, CheckCircle2, ZoomIn, ZoomOut, Maximi
 import clsx from "clsx";
 import { templates, templateIds } from "@/templates/registry";
 import { ThemeCustomizer } from "@/components/ThemeCustomizer";
+import { ConfigDialog } from "@/components/ConfigDialog";
 
 function EditorContent() {
     const searchParams = useSearchParams();
@@ -31,6 +32,7 @@ function EditorContent() {
     const [errors, setErrors] = useState<ValidationError[]>([]);
     const [isValid, setIsValid] = useState(true);
     const [scale, setScale] = useState(0.9);
+    const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
 
     // Initial Load
     useEffect(() => {
@@ -148,6 +150,8 @@ function EditorContent() {
 
     return (
         <div className="flex flex-col h-screen overflow-hidden font-sans bg-[#050505] text-white relative selection:bg-blue-500/30">
+            <ConfigDialog isOpen={isConfigDialogOpen} onClose={() => setIsConfigDialogOpen(false)} />
+
             {/* Header */}
             <header className="flex-none h-14 border-b border-white/10 flex items-center justify-between px-4 bg-[#050505] z-20 print:hidden">
                 <div className="flex items-center gap-4">
@@ -210,7 +214,15 @@ USER REQUEST:
                             <FileJson size={14} />
                             Config.json
                         </div>
-                        <span className="text-[10px] text-white/40 font-mono">Schema: v1.0</span>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => setIsConfigDialogOpen(true)}
+                                className="text-[10px] text-white/40 hover:text-blue-400 transition-colors uppercase tracking-wider font-semibold hover:underline decoration-blue-400/30 underline-offset-4"
+                            >
+                                View Example
+                            </button>
+                            <span className="text-[10px] text-white/40 font-mono">Schema: v1.0</span>
+                        </div>
                     </div>
                     <div className="flex-1 relative min-h-0">
                         <JsonEditor

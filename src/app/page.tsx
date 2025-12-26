@@ -5,8 +5,11 @@ import { ArrowRight, FileJson, Layers, CheckCircle, Terminal, Cpu } from "lucide
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
+import { ConfigDialog } from "@/components/ConfigDialog";
+
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false);
+  const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -92,10 +95,15 @@ export default function LandingPage() {
             Start Editing
             <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
           </Link>
-          <Link href="#demo" className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 text-white rounded-xl font-semibold text-lg hover:bg-white/10 transition-all backdrop-blur-sm">
+          <button
+            onClick={() => setIsConfigDialogOpen(true)}
+            className="w-full sm:w-auto px-8 py-4 bg-white/5 border border-white/10 text-white rounded-xl font-semibold text-lg hover:bg-white/10 transition-all backdrop-blur-sm"
+          >
             View Example Config
-          </Link>
+          </button>
         </motion.div>
+
+        <ConfigDialog isOpen={isConfigDialogOpen} onClose={() => setIsConfigDialogOpen(false)} />
 
         {/* Tech Stack Strip */}
         <motion.div
