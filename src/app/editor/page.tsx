@@ -120,6 +120,9 @@ function EditorContent() {
         if (!isValid) return;
 
         setIsDownloading(true);
+        // Small delay to allow React to repaint "LivePreview" into "Export Mode" (no gaps)
+        await new Promise(resolve => setTimeout(resolve, 200));
+
         try {
             const html2pdfModule = (await import("html2pdf.js")).default;
             const element = document.getElementById("resume-preview-content");
@@ -129,8 +132,9 @@ function EditorContent() {
                 margin: 0,
                 filename: `${parsedData.data.name || "Resume"}.pdf`,
                 image: { type: "jpeg" as const, quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const }
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF: { unit: "mm", format: "a4", orientation: "portrait" as const },
+                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
             };
 
             await html2pdfModule().set(opt).from(element).save();
@@ -262,7 +266,7 @@ function EditorContent() {
                             }}
                             className="bg-white shadow-[0_0_50px_-12px_rgba(0,0,0,0.5)]"
                         >
-                            <LivePreview data={parsedData} />
+                            <LivePreview data={parsedData} isExporting={isDownloading} />
                         </div>
                     </div>
                 </div>
