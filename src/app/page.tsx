@@ -146,8 +146,11 @@ export default function LandingPage() {
 
       {/* Footer */}
       <footer className="py-12 border-t border-white/5 text-center relative z-10 bg-[#050505]">
-        <p className="text-white/20 text-xs uppercase tracking-wider">
+        <p className="text-white/20 text-xs uppercase tracking-wider mb-2">
           Schema-driven UI • Type-safe Architecture • Design Systems
+        </p>
+        <p className="text-white/80 text-sm font-medium">
+          © {new Date().getFullYear()} GitHired. All rights reserved.
         </p>
       </footer>
     </div>
