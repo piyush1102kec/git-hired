@@ -170,6 +170,18 @@ function EditorContent() {
                     </div>
 
                     <button
+                        onClick={async () => {
+                            const { AI_PROMPT } = await import("@/lib/ai-prompt");
+                            await navigator.clipboard.writeText(AI_PROMPT);
+                            alert("AI Prompt copied to clipboard! Paste this into ChatGPT/Claude to generate a valid resume.");
+                        }}
+                        className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 text-blue-400 text-sm rounded-md hover:bg-blue-500/20 transition-all font-medium border border-blue-500/20"
+                    >
+                        <span className="text-xs">✨</span>
+                        Copy AI Prompt
+                    </button>
+
+                    <button
                         onClick={handleDownload}
                         className="flex items-center gap-2 px-4 py-1.5 bg-white text-black text-sm rounded-md hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium"
                         disabled={!isValid || isDownloading}
