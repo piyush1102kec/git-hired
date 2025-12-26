@@ -172,8 +172,18 @@ function EditorContent() {
                     <button
                         onClick={async () => {
                             const { AI_PROMPT } = await import("@/lib/ai-prompt");
-                            await navigator.clipboard.writeText(AI_PROMPT);
-                            alert("AI Prompt copied to clipboard! Paste this into ChatGPT/Claude to generate a valid resume.");
+                            const fullPrompt = `${AI_PROMPT}
+
+CURRENT RESUME JSON:
+\`\`\`json
+${jsonString}
+\`\`\`
+
+USER REQUEST:
+[Replace this with your instructions, e.g. "Add a skill section for React and Node.js", or "Fix the typo in the summary"]`;
+
+                            await navigator.clipboard.writeText(fullPrompt);
+                            alert("Copied directly to clipboard!\n\n1. System Instructions\n2. Your Current JSON\n3. Placeholder for your request\n\nPaste into ChatGPT/Claude now!");
                         }}
                         className="flex items-center gap-2 px-3 py-1.5 bg-blue-500/10 text-blue-400 text-sm rounded-md hover:bg-blue-500/20 transition-all font-medium border border-blue-500/20"
                     >
