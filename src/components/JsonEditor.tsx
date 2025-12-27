@@ -2,6 +2,7 @@
 
 import Editor from "@monaco-editor/react";
 import { useEffect, useState } from "react";
+import { ResumeJsonSchema } from "@/lib/resume-json-schema";
 
 interface JsonEditorProps {
     defaultValue: string;
@@ -15,7 +16,8 @@ export function JsonEditor({ defaultValue, onChange, errors }: JsonEditorProps) 
             <Editor
                 height="100%"
                 defaultLanguage="json"
-                defaultValue={defaultValue}
+                value={defaultValue}
+                path="resume.json"
                 theme="vs-dark"
                 onChange={(value) => onChange(value || "")}
                 options={{
@@ -29,7 +31,8 @@ export function JsonEditor({ defaultValue, onChange, errors }: JsonEditorProps) 
                     renderLineHighlight: 'none',
                     stickyScroll: { enabled: false },
                     // Transparent background support
-                    theme: "glass-dark"
+                    theme: "glass-dark",
+                    tabSize: 2,
                 }}
                 onMount={(editor, monaco) => {
                     // Define a custom theme that's transparent
@@ -42,8 +45,16 @@ export function JsonEditor({ defaultValue, onChange, errors }: JsonEditorProps) 
                         }
                     });
                     monaco.editor.setTheme('glass-dark');
+
+                    // Configure JSON Schema validation & Autocomplete
+                    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+                        validate: true,
+                        enableSchemaRequest: false,
+                        schemas: [ResumeJsonSchema]
+                    });
                 }}
             />
+            {/* Custom error display (kept as summary, while Monaco handles inline squigglies) */}
             {errors && errors.length > 0 && (
                 <div className="flex-none bg-red-900/20 border-t border-red-500/20 max-h-40 overflow-auto custom-scrollbar">
                     <div className="px-4 py-2 bg-red-500/10 flex items-center justify-between sticky top-0 backdrop-blur-sm">

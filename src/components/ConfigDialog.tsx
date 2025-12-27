@@ -9,18 +9,20 @@ import { defaultResume } from "@/lib/defaults";
 interface ConfigDialogProps {
     isOpen: boolean;
     onClose: () => void;
+    sectionSnippet?: any; // Context-aware snippet
 }
 
-export function ConfigDialog({ isOpen, onClose }: ConfigDialogProps) {
+export function ConfigDialog({ isOpen, onClose, sectionSnippet }: ConfigDialogProps) {
     const [copied, setCopied] = useState(false);
     const [mounted, setMounted] = useState(false);
-    const jsonString = JSON.stringify(defaultResume, null, 2);
+
+    // Determine what to show: specific snippet or full default
+    const dataToShow = sectionSnippet || defaultResume;
+    const jsonString = JSON.stringify(dataToShow, null, 2);
+    const isPartial = !!sectionSnippet;
 
     useEffect(() => {
         setMounted(true);
-        if (isOpen) {
-            console.log("ConfigDialog is OPEN");
-        }
     }, [isOpen]);
 
     const handleCopy = async () => {
@@ -55,8 +57,14 @@ export function ConfigDialog({ isOpen, onClose }: ConfigDialogProps) {
                         {/* Header */}
                         <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-[#0a0a0a]">
                             <div>
-                                <h2 className="text-lg font-semibold text-white">Example Configuration</h2>
-                                <p className="text-sm text-white/40">Reference this JSON structure for your resume</p>
+                                <h2 className="text-lg font-semibold text-white">
+                                    {isPartial ? "Example Snippet" : "Full Configuration"}
+                                </h2>
+                                <p className="text-sm text-white/40">
+                                    {isPartial
+                                        ? "Here is how this section should look like:"
+                                        : "Reference this JSON structure for your resume"}
+                                </p>
                             </div>
                             <button
                                 onClick={onClose}
