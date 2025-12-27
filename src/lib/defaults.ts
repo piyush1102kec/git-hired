@@ -24,7 +24,8 @@ export const defaultResume: Resume = {
         { id: "summary", type: "summary", order: 2, visible: true, column: "main", title: "" }, // No title for summary
         { id: "education", type: "education", order: 3, visible: true, column: "main" },
         { id: "experience", type: "experience", order: 4, visible: true, column: "main" },
-        { id: "skills", type: "skills", order: 5, visible: true, column: "main" }
+        { id: "projects", type: "projects", order: 5, visible: true, column: "main" },
+        { id: "skills", type: "skills", order: 6, visible: true, column: "main" }
     ],
     data: {
         name: "Incognito Fox",
@@ -76,7 +77,17 @@ export const defaultResume: Resume = {
                 visible: true
             },
         ],
-        projects: [],
+        projects: [
+            {
+                name: "Resume Builder",
+                description: "A comprehensive tool to build resumes with real-time preview and JSON configuration.",
+                url: "https://github.com/incognitofox/resume-builder",
+                technologies: ["Next.js", "React", "Tailwind CSS", "Monaco Editor"],
+                highlights: ["Implemented JSON schema validation", "Added PDF export using html2pdf.js"],
+                visible: true
+            }
+        ],
+
         skills: ["AutoCAD", "Civil 3D", "Stormwater Management", "Project Management", "Structural Analysis", "Site Development"],
     },
 };

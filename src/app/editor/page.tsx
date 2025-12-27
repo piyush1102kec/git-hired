@@ -31,7 +31,7 @@ function EditorContent() {
 
     const [errors, setErrors] = useState<ValidationError[]>([]);
     const [isValid, setIsValid] = useState(true);
-    const [scale, setScale] = useState(0.9);
+    const [scale, setScale] = useState(0.7);
     const [isConfigDialogOpen, setIsConfigDialogOpen] = useState(false);
 
     // Initial Load
@@ -148,9 +148,60 @@ function EditorContent() {
         }
     };
 
+    // Helper to get relevant example based on error path
+
+    const getExampleSnippet = (): any | undefined => {
+        if (!errors || errors.length === 0) return undefined;
+
+        const pathStr = errors[0].path;
+        if (!pathStr) return undefined;
+
+        // Special cases for common errors
+        if (pathStr.includes("projects")) return { projects: defaultResume.data.projects };
+        if (pathStr.includes("experience")) return { experience: defaultResume.data.experience };
+        if (pathStr.includes("education")) return { education: defaultResume.data.education };
+        if (pathStr.includes("social")) return { social: defaultResume.data.social };
+        if (pathStr.includes("skills")) return { skills: defaultResume.data.skills };
+
+        // General path traversal
+        try {
+            const parts = pathStr.split('.');
+            let current: any = defaultResume;
+
+            // Navigate down
+            for (const part of parts) {
+                if (current && typeof current === 'object' && part in current) {
+                    current = current[part];
+                } else {
+                    return undefined; // Path doesn't exist in default
+                }
+            }
+
+            // If result is primitive, try to return parent object for context
+            if (typeof current !== 'object') {
+                // Simple fallback: return the section it belongs to if known
+                if (pathStr.startsWith('data.')) {
+                    const section = parts[1]; // e.g. 'name', 'title'
+                    return { [section]: defaultResume.data[section as keyof typeof defaultResume.data] };
+                }
+            }
+
+            return current;
+        } catch (e) {
+            console.error("Error extracting snippet", e);
+            return undefined;
+        }
+    };
+
+    const sectionSnippet = isConfigDialogOpen ? getExampleSnippet() : undefined;
+
     return (
         <div className="flex flex-col h-screen overflow-hidden font-sans bg-[#050505] text-white relative selection:bg-blue-500/30">
-            <ConfigDialog isOpen={isConfigDialogOpen} onClose={() => setIsConfigDialogOpen(false)} />
+            <ConfigDialog
+                isOpen={isConfigDialogOpen}
+                onClose={() => setIsConfigDialogOpen(false)}
+                sectionSnippet={sectionSnippet}
+            />
 
             {/* Header */}
             <header className="flex-none h-14 border-b border-white/10 flex items-center justify-between px-4 bg-[#050505] z-20 print:hidden">
@@ -283,7 +334,7 @@ USER REQUEST:
                                 <button onClick={() => setScale(s => Math.min(1.5, s + 0.1))} className="p-1 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors">
                                     <ZoomIn size={14} />
                                 </button>
-                                <button onClick={() => setScale(0.9)} className="p-1 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors ml-1" title="Reset Zoom">
+                                <button onClick={() => setScale(0.7)} className="p-1 hover:bg-white/10 rounded text-white/60 hover:text-white transition-colors ml-1" title="Reset Zoom">
                                     <Maximize size={14} />
                                 </button>
                             </div>
